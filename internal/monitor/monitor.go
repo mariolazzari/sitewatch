@@ -29,14 +29,11 @@ func NewMonitor() *Monitor {
 	}
 }
 
-func (m *Monitor) CheckSite(url string, ch chan Result, wg *sync.WaitGroup) {
+func (m *Monitor) CheckSite(ctx context.Context, url string, ch chan Result, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	start := time.Now()
 	result := Result{URL: url}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err == nil {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"sync"
 	"time"
@@ -19,12 +20,16 @@ func main() {
 	}
 	resCh := make(chan monitor.Result)
 	var wg sync.WaitGroup
+
+	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
+	defer cancel()
+
 	monitor := monitor.NewMonitor()
 
 	for _, url := range urls {
 		wg.Add(1)
 		log.Printf("Checking %s...\n", url)
-		go monitor.CheckSite(url, resCh, &wg)
+		go monitor.CheckSite(ctx, url, resCh, &wg)
 	}
 
 	go func() {
