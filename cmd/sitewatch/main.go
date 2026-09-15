@@ -30,8 +30,7 @@ func main() {
 		close(resCh)
 	}()
 
-	for range len(urls) {
-		res := <-resCh
+	for res := range resCh {
 		log.Printf("Status: %v\n", res)
 	}
 
