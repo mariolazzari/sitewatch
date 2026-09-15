@@ -19,6 +19,7 @@ func main() {
 	}
 	resCh := make(chan monitor.Result)
 	var wg sync.WaitGroup
+	monitor := monitor.NewMonitor()
 
 	for _, url := range urls {
 		wg.Add(1)
