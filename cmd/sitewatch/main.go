@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"sync"
 	"time"
 
 	"github.com/mariolazzari/sitewatch/internal/monitor"
@@ -15,16 +16,21 @@ func main() {
 		"https://github.com",
 		"https://this-domain-does-not-exist.example",
 	}
-	resCh := make(chan monitor.Result, len(urls))
+	resCh := make(chan monitor.Result)
+	var wg sync.WaitGroup
 
 	for _, url := range urls {
+		wg.Add(1)
 		log.Printf("Checking %s...\n", url)
-		go monitor.CheckSite(url, resCh)
+		go monitor.CheckSite(url, resCh, &wg)
 	}
 
-	for res := range resCh {
+	for range len(urls) {
+		res := <-resCh
 		log.Printf("Status: %v\n", res)
 	}
+
+	wg.Wait()
 
 	log.Printf("Total elapsed time: %s\n", time.Since(start))
 }

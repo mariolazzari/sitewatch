@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"net/http"
+	"sync"
 )
 
 type Result struct {
@@ -10,7 +11,8 @@ type Result struct {
 	Err        error
 }
 
-func CheckSite(url string, ch chan Result) {
+func CheckSite(url string, ch chan Result, wg *sync.WaitGroup) {
+	defer wg.Done()
 	resp, err := http.Get(url)
 	if err != nil {
 		ch <- Result{
