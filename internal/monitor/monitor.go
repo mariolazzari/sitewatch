@@ -14,9 +14,9 @@ type Result struct {
 }
 
 func CheckSite(url string, ch chan Result, wg *sync.WaitGroup) {
+	defer wg.Done()
 	start := time.Now()
 
-	defer wg.Done()
 	resp, err := http.Get(url)
 	if err != nil {
 
