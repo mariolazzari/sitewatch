@@ -15,6 +15,7 @@ func main() {
 		"https://mariolazzari.it",
 		"https://github.com",
 		"https://this-domain-does-not-exist.example",
+		"https://mariolazzari.it/missing",
 	}
 	resCh := make(chan monitor.Result)
 	var wg sync.WaitGroup
