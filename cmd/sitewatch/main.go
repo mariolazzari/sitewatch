@@ -25,12 +25,15 @@ func main() {
 		go monitor.CheckSite(url, resCh, &wg)
 	}
 
+	go func() {
+		wg.Wait()
+		close(resCh)
+	}()
+
 	for range len(urls) {
 		res := <-resCh
 		log.Printf("Status: %v\n", res)
 	}
-
-	wg.Wait()
 
 	log.Printf("Total elapsed time: %s\n", time.Since(start))
 }
