@@ -15,16 +15,15 @@ func main() {
 		"https://github.com",
 		"https://this-domain-does-not-exist.example",
 	}
+	resCh := make(chan monitor.Result, len(urls))
 
 	for _, url := range urls {
 		log.Printf("Checking %s...\n", url)
+		go monitor.CheckSite(url, resCh)
+	}
 
-		statusCode, err := monitor.CheckSite(url)
-		if err != nil {
-			log.Printf("error checking %s: %s\n", url, err)
-		}
-
-		log.Printf("Status: %d\n", statusCode)
+	for res := range resCh {
+		log.Printf("Status: %v\n", res)
 	}
 
 	log.Printf("Total elapsed time: %s\n", time.Since(start))

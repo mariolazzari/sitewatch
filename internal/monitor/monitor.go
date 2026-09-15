@@ -4,12 +4,27 @@ import (
 	"net/http"
 )
 
-func CheckSite(url string) (int, error) {
+type Result struct {
+	URL        string
+	StatusCode int
+	Err        error
+}
+
+func CheckSite(url string, ch chan Result) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return -1, err
+		ch <- Result{
+			URL:        url,
+			StatusCode: -1,
+			Err:        err,
+		}
+		return
 	}
 	defer resp.Body.Close()
 
-	return resp.StatusCode, nil
+	ch <- Result{
+		URL:        url,
+		StatusCode: resp.StatusCode,
+		Err:        nil,
+	}
 }
