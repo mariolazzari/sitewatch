@@ -1,1 +1,3 @@
-# sitewatch
+# SiteWatch
+
+Site monitor in Go

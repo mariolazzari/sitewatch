@@ -7,7 +7,7 @@ import (
 func CheckSite(url string) (int, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return 0, err
+		return -1, err
 	}
 	defer resp.Body.Close()
 
